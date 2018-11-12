@@ -17,6 +17,7 @@ package com.mbed.coap.client;
 
 import com.mbed.coap.exception.CoapException;
 import com.mbed.coap.packet.CoapPacket;
+import com.mbed.coap.server.CoapHandler;
 import com.mbed.coap.server.CoapServer;
 import com.mbed.coap.utils.Callback;
 import com.mbed.coap.utils.FutureCallbackAdapter;
@@ -89,4 +90,33 @@ public class CoapClient implements Closeable {
         observationHandler.putObservationListener(observationListener, token, uriPath);
     }
 
+    /**
+     * Adds handler for incoming requests. URI context can be absolute or with
+     * postfix. Postfix can be a star sign (*) for example: /s/temp*, it means
+     * that all request under /s/temp/ will be directed to a given handler.
+     *
+     * @param uri URI of a resource
+     * @param coapHandler Handler object
+     */
+    public void addRequestHandler(String uri, CoapHandler coapHandler) {
+        coapServer.addRequestHandler(uri, coapHandler);
+    }
+ 
+    /**
+     * Removes request handler from server
+     *
+     * @param requestHandler request handler
+     */
+    public void removeRequestHandler(CoapHandler requestHandler) {
+        coapServer.removeRequestHandler(requestHandler);
+    }
+    
+    /**
+     * Returns handler that can be used as /.well-known/core resource.
+     *
+     * @return CoapHandler instance
+     */
+    public CoapHandler getResourceLinkResource () {
+        return coapServer.getResourceLinkResource();
+    }
 }
